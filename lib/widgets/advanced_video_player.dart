@@ -64,14 +64,7 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
               generalDefaultError: "حدث خطأ أثناء تشغيل الفيديو",
               generalNone: "لا يوجد",
               generalDefault: "افتراضي",
-              playlistEmptyPage: "قائمة التشغيل فارغة",
-              playlistItems: "عناصر",
               qualityAuto: "تلقائي",
-              controlsNextShort: "التالي",
-              controlsPreviousShort: "السابق",
-              controlsPlaybackSpeed: "سرعة التشغيل",
-              controlsSubtitles: "الترجمة",
-              controlsQuality: "الجودة",
             ),
           ],
           controlsConfiguration: BetterPlayerControlsConfiguration(
@@ -82,7 +75,7 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
             enableFullscreen: true,
             enableAudioTracks: true,
             loadingColor: Colors.red,
-            progressBarSelectedColor: Colors.red,
+            progressBarPlayedColor: Colors.red,
             progressBarHandleColor: Colors.red,
             enableSkips: true,
             controlBarColor: Colors.black.withOpacity(0.5),
@@ -91,25 +84,13 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
         );
 
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-      widget.isLive
-          ? BetterPlayerDataSourceType.network
-          : BetterPlayerDataSourceType.network,
+      BetterPlayerDataSourceType.network,
       widget.url,
       liveStream: widget.isLive,
       notificationConfiguration: BetterPlayerNotificationConfiguration(
         showNotification: true,
         title: widget.title,
         author: "Codro IPTV",
-      ),
-      // Ad configuration for Pre-roll and Post-roll
-      // Note: BetterPlayer supports IMA ads, but for Appodeal we usually handle Interstitials manually
-      // or use the Pre-roll/Post-roll logic if we have VAST tags.
-      // Since user mentioned Appodeal integration and pre-roll, I'll add a placeholder for ads logic.
-      adConfiguration: BetterPlayerAdConfiguration(
-        adTagUrls: [
-          // If we had VAST/VMAP urls we would put them here
-          // "https://pubads.g.doubleclick.net/gampad/ads?..."
-        ],
       ),
     );
 
@@ -135,9 +116,9 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
   }
 
   Future<void> _showInterstitialAd() async {
-    bool isLoaded = await Appodeal.isLoaded(AppodealAdType.Interstitial);
+    bool isLoaded = await Appodeal.isLoaded(Appodeal.INTERSTITIAL);
     if (isLoaded) {
-      Appodeal.show(AppodealAdType.Interstitial);
+      Appodeal.show(Appodeal.INTERSTITIAL);
     }
   }
 
@@ -160,7 +141,7 @@ class _AdvancedVideoPlayerState extends State<AdvancedVideoPlayer> {
           ),
         ),
         // Banner Ad below player
-        AppodealBanner(adSize: AppodealBannerSize.Banner, placement: "default"),
+        AppodealBanner(adSize: AppodealBannerSize.BANNER, placement: "default"),
       ],
     );
   }

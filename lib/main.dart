@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:media_kit/media_kit.dart';
+import 'package:stack_appodeal_flutter/stack_appodeal_flutter.dart';
 import 'providers/auth_provider.dart';
 import 'providers/iptv_provider.dart';
 import 'providers/config_provider.dart';
@@ -9,8 +9,6 @@ import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'utils/app_theme.dart';
 import 'screens/search_screen.dart';
-
-import 'package:stack_appodeal_flutter/stack_appodeal_flutter.dart';
 import 'services/appwrite_service.dart';
 
 void main() async {
@@ -29,15 +27,16 @@ void main() async {
     debugPrint(
       'CODRO_DEBUG: Initializing Appodeal with key: ${adKey.substring(0, 5)}...',
     );
-    Appodeal.setAppKey(adKey);
-    Appodeal.initialize(
-      adTypes: [
-        AppodealAdType.Banner,
-        AppodealAdType.Interstitial,
-        AppodealAdType.RewardedVideo,
-      ],
-      testMode: true, // Enable for testing
-    );
+    // Enable test mode before initialization
+    await Appodeal.setTesting(true);
+
+    // Initialize Appodeal with positional arguments
+    await Appodeal.initialize(adKey, [
+      Appodeal.BANNER,
+      Appodeal.INTERSTITIAL,
+      Appodeal.REWARDED_VIDEO,
+    ]);
+
     debugPrint('CODRO_DEBUG: Appodeal initialized.');
   } catch (e) {
     debugPrint('CODRO_DEBUG: Appodeal initialization failed: $e');
