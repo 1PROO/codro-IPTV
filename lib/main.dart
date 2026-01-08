@@ -10,18 +10,37 @@ import 'screens/home_screen.dart';
 import 'utils/app_theme.dart';
 import 'screens/search_screen.dart';
 
-void main() {
-  // ... existing main ...
+import 'package:stack_appodeal_flutter/stack_appodeal_flutter.dart';
+import 'services/appwrite_service.dart';
+
+void main() async {
   debugPrint('CODRO_DEBUG: Starting main()...');
   WidgetsFlutterBinding.ensureInitialized();
   debugPrint('CODRO_DEBUG: WidgetsFlutterBinding initialized.');
 
   try {
-    debugPrint('CODRO_DEBUG: Initializing MediaKit...');
-    MediaKit.ensureInitialized();
-    debugPrint('CODRO_DEBUG: MediaKit initialized.');
+    debugPrint('CODRO_DEBUG: Fetching remote config for ads...');
+    final appwrite = AppwriteService();
+    final config = await appwrite.getConfig();
+    final adKey =
+        config['appodeal_key']?.toString() ??
+        "0b5c0c469e1c01f1161f7aa8b5b6d08a25513d94e8f7a425";
+
+    debugPrint(
+      'CODRO_DEBUG: Initializing Appodeal with key: ${adKey.substring(0, 5)}...',
+    );
+    Appodeal.setAppKey(adKey);
+    Appodeal.initialize(
+      adTypes: [
+        AppodealAdType.Banner,
+        AppodealAdType.Interstitial,
+        AppodealAdType.RewardedVideo,
+      ],
+      testMode: true, // Enable for testing
+    );
+    debugPrint('CODRO_DEBUG: Appodeal initialized.');
   } catch (e) {
-    debugPrint('CODRO_DEBUG: MediaKit initialization failed: $e');
+    debugPrint('CODRO_DEBUG: Appodeal initialization failed: $e');
   }
 
   FlutterError.onError = (FlutterErrorDetails details) {

@@ -13,6 +13,8 @@ class ConfigProvider with ChangeNotifier {
   String primaryColor = '#FFFFFF';
   bool freeTrialMode = false;
   String streamingAgent = 'IPTVSmarters';
+  String appodealKey =
+      '0b5c0c469e1c01f1161f7aa8b5b6d08a25513d94e8f7a425'; // Default fallback
 
   ConfigProvider() {
     init();
@@ -34,6 +36,9 @@ class ConfigProvider with ChangeNotifier {
     primaryColor = config['app_primary_color']?.toString() ?? '#FFFFFF';
     freeTrialMode = config['free_trial_mode']?.toString() == 'true';
     streamingAgent = config['streaming_agent']?.toString() ?? 'IPTVSmarters';
+    appodealKey =
+        config['appodeal_key']?.toString() ??
+        '0b5c0c469e1c01f1161f7aa8b5b6d08a25513d94e8f7a425';
 
     notifyListeners();
   }
